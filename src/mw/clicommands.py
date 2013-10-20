@@ -310,11 +310,10 @@ class MergeCommand(CommandBase):
                 os.rename(full_filename, full_filename + '.remote')
                 # Open merge tool
                 merge_command = self.merge_tool % (full_filename + '.local', 
-                    full_filename + '.remote', full_filename + '.merge')
+                    full_filename + '.remote')
                 subprocess.call(merge_command.split(' '))
                 # mv filename.merge filename and delete tmp files
-                os.rename(full_filename + '.merge', full_filename)
-                os.remove(full_filename + '.local')
+                os.rename(full_filename + '.local', full_filename)
                 os.remove(full_filename + '.remote')
                 # mw ci pagename
                 commit_command = CommitCommand()
