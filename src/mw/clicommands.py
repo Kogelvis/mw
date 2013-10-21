@@ -83,9 +83,14 @@ class CommandBase(object):
         if not self.api_setup: # do not call _api_setup twice
             cookie_filename = os.path.join(self.metadir.location, 'cookies')
             self.api_url = self.metadir.config.get('remote', 'api_url')
-            filecookiejar = cookielib.MozillaCookieJar(cookie_filename)
-            self.api = simplemediawiki.MediaWiki(self.api_url,
-                                             cookiejar=filecookiejar)
+            fcj = cookielib.MozillaCookieJar(cookie_filename)
+            try:
+                fcj.load()
+            except IOError:
+                fcj.save()
+                fcj.load()
+
+            self.api = simplemediawiki.MediaWiki(self.api_url,cookiejar=fcj)
             self.api_setup = True
 
 
